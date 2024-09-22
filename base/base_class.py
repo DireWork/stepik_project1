@@ -9,25 +9,26 @@ from utils.constants import Constants
 
 class Base:
 
-    def __init__(self):
-        self.options = webdriver.ChromeOptions()
-        self.options.add_experimental_option('detach', True)
-        self.options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        self.options.add_argument("--no-sandbox")
-        # options.add_argument("--headless")
-        self.path_chrome = Service("C:\\Users\\kosty\\OneDrive\\Desktop\\qa courses\\SELENIUM\\chromedriver.exe")
-        self.driver = webdriver.Chrome(self.options, self.path_chrome)
-
+    def __init__(self, driver=None):
+        self.driver = driver
+        if self.driver is None:
+            self.options = webdriver.ChromeOptions()
+            self.options.add_experimental_option('detach', True)
+            self.options.add_experimental_option('excludeSwitches', ['enable-logging'])
+            self.options.add_argument("--no-sandbox")
+            self.path_chrome = Service("C:\\Users\\kosty\\OneDrive\\Desktop\\qa courses\\SELENIUM\\chromedriver.exe")
+            self.driver = webdriver.Chrome(service=self.path_chrome, options=self.options)
 
     """Method open browser"""
     def open_page(self):
-        self.driver = webdriver.Chrome(self.options, self.path_chrome)
         self.driver.get(Constants.url)
         self.driver.maximize_window()
 
     """Method close browser"""
     def close_browser(self):
-        self.driver.quit()
+        if self.driver:
+            self.driver.quit()
+            self.driver = None
         print("Browser closed")
 
     """Method get current url"""
@@ -36,9 +37,9 @@ class Base:
         print("current url " + get_url)
 
     """Method assert word"""
-    def assert_word(self, word, result):
-        value_word = word.text
-        assert value_word == result
+    def assert_word(self, locator, result):
+        element = self.check_element_presence(locator)
+        assert element.text == result
         print("good assert word")
 
     """Method screenshot"""
