@@ -11,5 +11,6 @@ class Locators:
     """MAIN PAGE"""
     mobile_phones_button = '//a[@href="https://mobilguru.by/mobilnye-telefony"]'
     mobile_phones_title = '//h1[text()="Мобильные телефоны"]'
-    apple_checkbox = '//input[@id="mfilter-opts-attribs-86-manufacturers-45"]//..//..//label'
+    apple_checkbox = '//input[@id="mfilter-opts-attribs-86-manufacturers-45"]'
     sort_by_price = '//span[text()="Цена "]'
+    slider2 = '//*[@id="mfilter-price-slider"]/span[2]'

@@ -1,5 +1,8 @@
 import datetime
+import time
+
 from selenium import webdriver
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -23,13 +26,14 @@ class Base:
     def open_page(self):
         self.driver.get(Constants.url)
         self.driver.maximize_window()
+        print("Browser is open")
 
     """Method close browser"""
     def close_browser(self):
         if self.driver:
             self.driver.quit()
             self.driver = None
-        print("Browser closed")
+        print("Browser is closed")
 
     """Method get current url"""
     def get_current_url(self):
@@ -70,11 +74,13 @@ class Base:
         try:
             element = self.check_element_presence(locator)
             element.click()
+            time.sleep(0.5)
         except:
             self.get_screenshot("error")
             print("Error: click_element")
             raise
 
+    """Method send text to element"""
     def send_text(self, locator , text):
         try:
             element = self.check_element_presence(locator)
@@ -82,4 +88,15 @@ class Base:
         except:
             self.get_screenshot("error")
             print("Error: send_keys")
+            raise
+
+    """Method move slider"""
+    def move_slider(self, locator, to_position):
+        try:
+            element = self.check_element_presence(locator)
+            action = ActionChains(self.driver)
+            action.click_and_hold(element).move_by_offset(to_position, 0).release().perform()
+        except:
+            self.get_screenshot("error")
+            print("Error: move_slider")
             raise
