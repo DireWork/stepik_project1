@@ -74,7 +74,7 @@ class Base:
         try:
             element = self.check_element_presence(locator)
             element.click()
-            time.sleep(0.5)
+            time.sleep(1)
         except:
             self.get_screenshot("error")
             print("Error: click_element")
@@ -96,7 +96,17 @@ class Base:
             element = self.check_element_presence(locator)
             action = ActionChains(self.driver)
             action.click_and_hold(element).move_by_offset(to_position, 0).release().perform()
+            time.sleep(1)
         except:
             self.get_screenshot("error")
             print("Error: move_slider")
+            raise
+
+    def get_text(self, locator):
+        try:
+            value = self.check_element_presence(locator).text
+            return value
+        except:
+            self.get_screenshot("error")
+            print("Error: get_text")
             raise
