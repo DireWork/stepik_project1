@@ -16,5 +16,5 @@ class LoginPage(Base):
         self.send_text(Locators.password, Constants.password)
         self.click_element(Locators.login_button)
         self.get_current_url()
-        self.assert_word(Locators.account_button, "Иван")
+        self.assert_is(Locators.account_button, "Иван")
         print("Success login")

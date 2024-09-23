@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.support.select import Select
 
 from utils.constants import Constants
 
@@ -41,7 +42,7 @@ class Base:
         print("current url " + get_url)
 
     """Method assert word"""
-    def assert_word(self, locator, result):
+    def assert_is(self, locator, result):
         element = self.check_element_presence(locator)
         assert element.text == result
         print("good assert word")
@@ -102,6 +103,7 @@ class Base:
             print("Error: move_slider")
             raise
 
+    """Method get text from element"""
     def get_text(self, locator):
         try:
             value = self.check_element_presence(locator).text
@@ -109,4 +111,26 @@ class Base:
         except:
             self.get_screenshot("error")
             print("Error: get_text")
+            raise
+
+    """Method select in dropdown"""
+    def select_by_visible_text_in_dropdown(self, locator, text):
+        try:
+            element = self.check_element_presence(locator)
+            select = Select(element)
+            select.select_by_visible_text(text)
+            time.sleep(1)
+        except:
+            self.get_screenshot("error")
+            print("Error: select_by_visible_text_in_dropdown")
+            raise
+
+    """Method find elements"""
+    def search_elements(self, locator):
+        try:
+            elements = self.driver.find_elements(By.XPATH, locator)
+            return elements
+        except:
+            self.get_screenshot("error")
+            print("Error: search_elements")
             raise
