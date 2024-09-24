@@ -1,20 +1,16 @@
 from pages.login_page import LoginPage
 from pages.main_page import MainPage
 
-def test_buy_apple(set_up):
-    login = LoginPage()
-    login.open_page()
+def test_buy_apple(driver):
+    login = LoginPage(driver)
     login.authorization()
 
-    main = MainPage(driver=login.driver)
+    main = MainPage(driver)
     main.select_apple()
-    main.close_browser()
 
-def test_buy_xiaomi(set_up):
-    login = LoginPage()
-    login.open_page()
+def test_buy_xiaomi(driver):
+    login = LoginPage(driver)
     login.authorization()
 
-    main = MainPage(driver=login.driver)
+    main = MainPage(driver)
     main.select_xiaomi()
-    main.close_browser()

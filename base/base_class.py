@@ -1,12 +1,9 @@
 import datetime
 import time
 
-from selenium import webdriver
 from selenium.webdriver import ActionChains
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.select import Select
 
 from utils.constants import Constants
@@ -15,26 +12,6 @@ class Base:
 
     def __init__(self, driver=None):
         self.driver = driver
-        if self.driver is None:
-            self.options = webdriver.ChromeOptions()
-            self.options.add_experimental_option('detach', True)
-            self.options.add_experimental_option('excludeSwitches', ['enable-logging'])
-            self.options.add_argument("--no-sandbox")
-            self.path_chrome = Service("C:\\Users\\kosty\\OneDrive\\Desktop\\qa courses\\SELENIUM\\chromedriver.exe")
-            self.driver = webdriver.Chrome(service=self.path_chrome, options=self.options)
-
-    """Method open browser"""
-    def open_page(self):
-        self.driver.get(Constants.url)
-        self.driver.maximize_window()
-        print("Browser is open")
-
-    """Method close browser"""
-    def close_browser(self):
-        if self.driver:
-            self.driver.quit()
-            self.driver = None
-        print("Browser is closed")
 
     """Method get current url"""
     def get_current_url(self):
@@ -42,16 +19,16 @@ class Base:
         print("current url " + get_url)
 
     """Method assert word"""
-    def assert_is(self, locator, result):
+    def assert_is(self, locator, expected_text):
         element = self.check_element_presence(locator)
-        assert element.text == result
-        print("good assert word")
+        actual_text = element.text
+        assert actual_text == expected_text, f"Expected text '{expected_text}', but got '{actual_text}'"
 
     """Method screenshot"""
     def get_screenshot(self, sort):
         now_date = datetime.datetime.now().strftime("%Y.%m.%d-%H.%M.%S")
         name_screenshot = "screenshot" + now_date + ".png"
-        self.driver.save_screenshot(f"D:\\Projects\\testProject\\screen\\{name_screenshot}")
+        self.driver.save_screenshot(Constants.screen_path + name_screenshot)
         print(f"Screenshot {sort} {name_screenshot} done")
 
     """Method assert URL"""
@@ -63,7 +40,7 @@ class Base:
     """Method check element presence"""
     def check_element_presence(self, locator):
         try:
-            element = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, locator)))
+            element = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(locator))
             return element
         except:
             self.get_screenshot("error")
@@ -128,7 +105,7 @@ class Base:
     """Method find elements"""
     def search_elements(self, locator):
         try:
-            elements = self.driver.find_elements(By.XPATH, locator)
+            elements = self.driver.find_elements(*locator)
             return elements
         except:
             self.get_screenshot("error")
